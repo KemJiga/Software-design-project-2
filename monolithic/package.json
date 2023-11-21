@@ -4,12 +4,13 @@
   "description": "API for crud management",
   "main": "App.js",
   "scripts": {
-    "dev": "nodemon App.js",
+    "dev": "nodemon ./src/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kemjiga",
   "license": "ISC",
   "devDependencies": {
+    "babel": "^6.23.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3"
   },
