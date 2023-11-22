@@ -35,8 +35,23 @@ async function readUser(req, res) {
   }
 }
 
+async function readDeletedUser(req, res) {
+  const { idType, idNumber} = req.query;
+  try {
+    const user = await User.find({ idType, idNumber, deletedAt: { $ne: null } });
+    const newLog = new Log({ action: 'read user', idType, idNumber });
+    await newLog.save();
+    res.status(201).json(user);
+    console.log(`${user.firstName} read successfully!`);
+    console.log(newLog);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+}
+
 // Routes
 app.get('/', readUser);
+app.get('/deleted', readDeletedUser);
 
 // Starting the server
 const start = async () => {
