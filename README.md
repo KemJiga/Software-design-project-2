@@ -1,10 +1,10 @@
 # Software Design Project 2
 
 ## Description
-This project is a CRUD example implemented on a micro services and container architecture 
+This project is a CRUD example implemented on a micro services and container architecture .
 
-## Pre requisites
-Your machine must have installed docker to be able to run this project
+## Considerations
+Your machine must have installed docker to be able to run this project. This repo includes a monolithic version of the system.
 
 ## To start setting up the project
 Step 1: Clone the repo
@@ -19,7 +19,7 @@ Step 2: Cd into each micro service and run:
 npm install
 ```
 
-Step 3: On every micro service put your credentials on a .env file.
+Step 3 (optional): On every micro service put your credentials on a .env file.
 
 ```bash
 PORT=YOUR PORT
