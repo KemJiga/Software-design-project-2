@@ -8,6 +8,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=Kemjiga
       - MONGO_INITDB_ROOT_PASSWORD=password
+    #volumes:
+      #- mongo-volume:/data/db
   gateway-ms:
     build:
       context: ./gateway
@@ -81,3 +83,6 @@ services:
     environment:
       - PORT=8004
       - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
+
+volumes:
+  mongo-volume:
