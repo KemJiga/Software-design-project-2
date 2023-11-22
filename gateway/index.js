@@ -11,9 +11,9 @@ app.get('/', (req, res) => {
     return res.status(200).json({ message: 'Root' });
   });
 app.use('/create', proxy('http://localhost:8001'));
-app.use('/delete', proxy('http://localhost:8002'));
-app.use('/read', proxy('http://localhost:8003'));
-app.use('/update', proxy('http://localhost:8004'));
+app.use('/read', proxy('http://localhost:8002'));
+app.use('/delete', proxy('http://localhost:8004'));
+app.use('/update', proxy('http://localhost:8003'));
 
 
 app.listen(8000, () => {
