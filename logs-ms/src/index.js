@@ -5,7 +5,7 @@ const connectDB = require("./config/database");
 const Log = require("./models/log.model");
 
 // Environment variables
-const PORT = process.env.PORT || 8003;
+const PORT = process.env.PORT || 8005;
 const dotenv = require("dotenv");
 dotenv.config();
 
