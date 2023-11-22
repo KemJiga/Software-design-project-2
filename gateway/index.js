@@ -14,6 +14,7 @@ app.use('/create', proxy('http://localhost:8001'));
 app.use('/read', proxy('http://localhost:8002'));
 app.use('/delete', proxy('http://localhost:8004'));
 app.use('/update', proxy('http://localhost:8003'));
+app.use('/log', proxy('http://localhost:8005'));
 
 
 app.listen(8000, () => {
