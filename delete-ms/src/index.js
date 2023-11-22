@@ -24,7 +24,7 @@ app.use(express.json());
 async function deleteUser(req, res) {
   const { idType, idNumber} = req.query;
   try {
-    const user = await User.findByIdAndUpdate(idNumber, { deletedAt: Date.now() });
+    const user = await User.findOneAndUpdate({idNumber}, { deletedAt: Date.now() }, {new: true});
     const newLog = new Log({ action: 'delete user', idType, idNumber });
     await newLog.save();
     res.status(201).json(user);
