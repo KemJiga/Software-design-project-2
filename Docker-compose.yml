@@ -1,0 +1,83 @@
+version: "3.9"
+services:
+  mongo-container:
+    image: mongo
+    container_name: mongo-container
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Kemjiga
+      - MONGO_INITDB_ROOT_PASSWORD=password
+  gateway-ms:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway-ms
+    ports:
+      - "8000:8000"
+    depends_on:
+      - create-ms
+      - read-ms
+      - update-ms
+      - delete-ms
+      - logs-ms
+  logs-ms:
+    build:
+      context: ./logs-ms
+      dockerfile: Dockerfile
+    container_name: logs-ms
+    ports:
+      - "8005:8005"
+    depends_on:
+      - mongo-container
+    environment:
+      - PORT=8005
+      - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
+  create-ms:
+    build:
+      context: ./create-ms
+      dockerfile: Dockerfile
+    container_name: create-ms
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongo-container
+    environment:
+      - PORT=8001
+      - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
+  read-ms:
+    build:
+      context: ./read-ms
+      dockerfile: Dockerfile
+    container_name: read-ms
+    ports:
+      - "8002:8002"
+    depends_on:
+      - mongo-container
+    environment:
+      - PORT=8002
+      - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
+  update-ms:
+    build:
+      context: ./update-ms
+      dockerfile: Dockerfile
+    container_name: update-ms
+    ports:
+      - "8003:8003"
+    depends_on:
+      - mongo-container
+    environment:
+      - PORT=8003
+      - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
+  delete-ms:
+    build:
+      context: ./delete-ms
+      dockerfile: Dockerfile
+    container_name: delete-ms
+    ports:
+      - "8004:8004"
+    depends_on:
+      - mongo-container
+    environment:
+      - PORT=8004
+      - MONGODB_URI=mongodb://Kemjiga:password@mongo-container:27017/miapp?authSource=admin
