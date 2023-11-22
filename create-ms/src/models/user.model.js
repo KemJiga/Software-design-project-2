@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
     type: Date, 
     default: null,
   },
-  updateAt: {
+  updatedAt: {
     type: Date, 
     default: null,
   },
