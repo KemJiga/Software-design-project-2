@@ -25,11 +25,16 @@ async function readUser(req, res) {
   const { idType, idNumber} = req.query;
   try {
     const user = await User.find({ idType, idNumber, deletedAt: null });
-    const newLog = new Log({ action: 'read user', idType, idNumber });
-    await newLog.save();
-    res.status(201).json(user);
-    console.log(`${user.firstName} read successfully!`);
-    console.log(newLog);
+    if (user.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+      console.log(`${idType} ${idNumber} not found!`);
+    }else{
+      const newLog = new Log({ action: 'read user', idType, idNumber });
+      await newLog.save();
+      res.status(201).json(user);
+      console.log(`${user.firstName} read successfully!`);
+      console.log(newLog);
+    }
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
