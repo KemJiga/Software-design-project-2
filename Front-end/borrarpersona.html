@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style2.css">
+    <link rel="icon" href="./public/icon.png" type="image/x-icon">
+    <title>Consultar datos</title>
+</head>
+<body>
+    <div class="conheader">
+        <img class="logo" src="./public/pdatabase.png" alt="pdatabase">
+        <p class="title">Borrar persona</p>
+    </div>
+    <div class="container">
+        <div class="square">
+            <div>
+            <div class="inputs">
+                <div>
+                    <div class="block">
+                        <div class="text">Tipo de documento</div>
+                        <select id="select1" class="lista-input">
+                            <option value="">Seleccione una opción</option>
+                            <option value="opcion1">Cedula</option>
+                            <option value="opcion2">Tarjeta de identidad</option>
+                        </select>
+                    </div>
+                    <div class="block">
+                        <div class="text">No. de documento</div>
+                        <input type="text" id="input1" class="text-input nodocumento" placeholder="Ingrese un número">
+                    </div>
+                    <div class="block">
+                        <div class="text">Primer nombre</div>
+                        <input type="text" id="input2" class="text-input pnombre" placeholder="Ingrese su nombre">
+                    </div>
+                    <div class="block">
+                        <div class="text">Segundo nombre</div>
+                        <input type="text" id="input3" class="text-input snombre" placeholder="Ingrese su segundo nombre">
+                    </div>
+                    <div class="block">
+                        <div class="text">Apellidos</div>
+                        <input type="text" id="input4" class="text-input apellidos" placeholder="Ingrese sus apellidos">
+                    </div>
+                </div>
+                <div>
+                    <button class="botonfoto" id="seleccionarFoto">
+                        <img class="fotoboton" id="fotoMostrada" src="./public/imageloader.png" alt="">
+                    </button>
+                    <input type="file" id="inputFoto" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <div class="block">
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="block">
+                <div class="text">Fecha de nacimiento</div>
+                <input type="date" id="date1" class="fecha-input">
+            </div>
+            <div class="block">
+                <div class="text genero">Género</div>
+                <select id="select2" class="lista-input">
+                    <option value="">Seleccione una opción</option>
+                    <option value="opcion1">Femenino</option>
+                    <option value="opcion2">Masculino</option>
+                    <option value="opcion3">No binario</option>
+                </select>
+            </div>
+            <div class="block">
+                <div class="text correo">Correo electrónico</div>
+                <input type="text" id="input5" class="text-input correo" placeholder="Ingrese su correo">
+            </div>
+            <div class="block">
+                <div class="text">Celular</div>
+                <input type="text" id="input6" class="text-input celular" placeholder="Ingrese su celular">
+            </div> 
+        </div>
+    </div>
+    <div class="acciones">
+        <div class="acciones2">
+            <button onclick="borrarUsuario()" class="deletebutton">Borrar</button>
+        </div>
+        <div>
+            <a href="./menu.html" class="button">Volver</a>
+        </div>
+    </div>
+    <script>
+
+        function borrarUsuario() {
+            const input1 = document.getElementById('input1');
+            const idNumber = input1.value.trim();
+            const select1 = document.getElementById('select1');
+            const idType = select1.options[select1.selectedIndex].text;
+
+            const url = `http://localhost:8000/delete/?idNumber=${idNumber}&idType=${idType}`;
+            fetch(url, { method: "DELETE" })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response.idNumber) {
+                        alert('Usuario borrado exitosamente!');
+                        window.location.href = 'menu.html';
+                    } else {
+                        alert('Error borrando el usuario');
+                    }
+                });
+        }
+
+        window.onload = function() {
+            const id = localStorage.getItem("idNumber");
+            const tipo = localStorage.getItem("idType");
+            console.log(id);
+            console.log(tipo);
+            const url = `http://localhost:8000/read/log/?idNumber=${id}`;
+            fetch(url, { method: "GET" })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response.length > 0) {
+                        // cargar datos
+                        document.getElementById('input1').value = response[0].idNumber;
+                        document.getElementById('input2').value = response[0].firstName;
+                        document.getElementById('input3').value = response[0].middleName;
+                        document.getElementById('input4').value = response[0].lastName;
+                        document.getElementById('date1').value = fixDate(response[0].birthDate);
+                        document.getElementById('input5').value = response[0].email;
+                        document.getElementById('input6').value = response[0].phone;
+                        fixSelect(document.getElementById('select1'), response[0].idType);
+                        fixSelect(document.getElementById('select2'), response[0].gender);
+
+                        document.getElementById('input1').readOnly = true;
+                        document.getElementById('input2').readOnly = true;
+                        document.getElementById('input3').readOnly = true;
+                        document.getElementById('input4').readOnly = true;
+                        document.getElementById('date1').readOnly = true;
+                        document.getElementById('input5').readOnly = true;
+                        document.getElementById('input6').readOnly = true;
+                        document.getElementById('select1').disabled = true;
+                        document.getElementById('select2').disabled = true;
+                        document.getElementById('seleccionarFoto').disabled = true;
+
+                        // genera error de no cargado
+                        // fotoMostrada.src = response[0].photo;
+                    } else {
+                        alert('Error cargando los datos');
+                    }});
+        }
+        function fixSelect(select, value) {
+            const options = select.options;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].text === value) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function fixDate(date) {
+            const dateParts = date.split(':');
+            return dateParts[0].slice(0,10);
+        }
+    </script>
+</body>
+</html>

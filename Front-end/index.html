@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./public/icon.png" type="image/x-icon">
+    <title>PDatabase</title>
+</head>
+<body>
+    <div class="container">
+        <img class="logo" src="./public/pdatabase.png" alt="pdatabase">
+        <div class="square">
+            <div class="block">
+                <div class="text">Identificacion</div>
+                <input id="input1" class="text-input">
+            </div>
+            <div class="block">
+                <div class="text">Tipo de documento</div>
+                <select id="select1" class="lista-input">
+                    <option value="">Seleccione una opción</option>
+                    <option value="opcion1">Cedula</option>
+                    <option value="opcion2">Tarjeta de identidad</option>
+                </select>
+            </div>
+            <div class="block">
+                <button onclick="validarBusqueda()" class="button">Ingresar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function validarBusqueda() {
+            const input1 = document.getElementById('input1');
+            const idNumber = input1.value.trim();
+            const select1 = document.getElementById('select1');
+            const idType = select1.options[select1.selectedIndex].text;
+
+            if (idNumber === 'admin') {
+                window.location.href = 'menu.html';
+            }else{
+                const url = `http://localhost:8000/read/?idType=${idType}&idNumber=${idNumber}`;
+                fetch(url, { method: "GET" })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response.length > 0) {
+                        alert('Login exitoso!');
+                        window.location.href = 'menu.html';
+                    } else {
+                        alert('Usuario o contraseña incorrectas');
+                    }});
+            }
+        }    
+    </script>
+</body>
+<footer>
+    <div><img class="redes" src="./public/redes.png" alt="redes"></div>
+    <button class="button">Contacto</button>
+</footer>
+</html>

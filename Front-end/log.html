@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style2.css">
+    <link rel="icon" href="./public/icon.png" type="image/x-icon">
+    <title>Consultar datos</title>
+</head>
+<body>
+    <div class="conheader">
+        <img class="logo" src="./public/pdatabase.png" alt="pdatabase">
+        <p class="title">Consulta Logs</p>
+    </div>
+    <div class="container">
+        <div class="square2">
+    <div>
+        <div id="contenedorTabla">
+            <table id="tablaDatos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>        
+    
+    <div class="filtros">
+        <div class="block">
+        
+    </div>
+        <label  for="filtro_id">Filtrar por ID:</label>
+    <input type="text" class="text-input nodocumento2" id="filtro_id">
+
+    <label class="label" for="filtro_fecha">Filtrar por Fecha:</label>
+    <input class="fecha-input" type="date" id="filtro_fecha" value="2023-11-25">
+
+    <label class="label" for="filtro_tipo">Filtrar por Tipo de Documento:</label>
+    <select class="lista-input" id="filtro_tipo">
+        <option value="todos">Todos</option>
+        <option value="Tarjeta de identidad">Tarjeta de identidad</option>
+        <option value="Cedula">Cedula</option>
+    </select>
+
+    <button class="button restaurar" onclick="aplicarFiltros()">Consultar</button>
+    <button class="button restaurar" onclick="restaurarFiltros()">Restaurar</button>
+    </div>
+    
+
+    <script>
+        function aplicarFiltros(){
+            const filtroId = document.getElementById('filtro_id').value.trim();
+            const filtroFecha = document.getElementById('filtro_fecha').value;
+            var filtroTipo = document.getElementById('filtro_tipo').value;
+
+            if (filtroTipo == 'todos') {
+                filtroTipo = '';
+            }
+            const url = `http://localhost:8000/log/?idType=${filtroTipo}&idNumber=${filtroId}&date=${filtroFecha}`;
+
+            fetch(url, { method: "GET" })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response != null) {
+                        if (response.length == 0) {
+                            alert('No se encontraron resultados');
+                        }
+                        const tbody = document.getElementById('tablaDatos').getElementsByTagName('tbody')[0];
+                        tbody.innerHTML = '';
+                        for (let i = 0; i < response.length; i++) {
+                            //console.log(response[i]);
+
+                            const fila = tbody.insertRow(i);
+
+                            const columnaId = fila.insertCell(0);
+                            const columnaTipo = fila.insertCell(1);
+                            const columnaFecha = fila.insertCell(2);
+                            const columnaAccion = fila.insertCell(3);
+
+                            columnaId.textContent = response[i].idNumber;
+                            columnaTipo.textContent = response[i].idType;
+                            columnaFecha.textContent = fixDate(response[i].createdAt);
+                            columnaAccion.textContent = response[i].action;
+                        }
+                    } else {
+                        alert('Error cargando los logs');
+                    }});
+        }
+
+        function fixDate(date) {
+            const dateParts = date.split(':');
+            return dateParts[0].slice(0,10);
+        }
+        function restaurarFiltros() {
+            document.getElementById('filtro_id').value = '';
+            document.getElementById('filtro_fecha').value = '2020-10-06';
+            document.getElementById('filtro_tipo').value = 'todos';
+            aplicarFiltros();
+        }
+    </script>
+        <div class="foto">
+            
+        </div>
+    </div>
+    <div class="acciones">
+        <div class="acciones2">
+            
+        </div>
+        <div>
+            <a href="./menu.html" class="button">Volver</a>
+        </div>
+    </div>
+</body>
+</html>

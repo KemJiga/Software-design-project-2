@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./public/icon.png" type="image/x-icon">
+    <title>Buscador</title>
+</head>
+<body>
+    <div class="container3">
+        <img class="logo3" src="./public/pdatabase.png" alt="pdatabase">
+        <div class="square">
+            <div class="block">
+                <div class="text">Buscar por (NoDocumento)</div>
+                <input type="text" id="input1" class="text-input" placeholder="Ingrese número de documento">
+            </div>
+            <div class="block">
+              <div class="text">Tipo de documento</div>
+              <select id="select1" class="lista-input">
+                  <option value="">Seleccione una opción</option>
+                  <option value="opcion1">Cedula</option>
+                  <option value="opcion2">Tarjeta de identidad</option>
+              </select>
+          </div>
+            <div class="block">
+                <button onclick="validarBusqueda()" class="button">Buscar</button>
+            </div>
+        </div>
+    </div>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const opcion = urlParams.get('opcion'); 
+
+    function validarBusqueda() {
+      const input1 = document.getElementById('input1');
+      const idNumber = input1.value.trim();
+      const select1 = document.getElementById('select1');
+      const idType = select1.options[select1.selectedIndex].text;
+
+      if (idNumber !== '' && /^\d{1,10}$/.test(idNumber)) {
+        input1.classList.remove('invalid');
+
+        const url = `http://localhost:8000/read/?idType=${idType}&idNumber=${idNumber}`;
+
+            fetch(url, { method: "GET" })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response.length > 0) {  
+                        localStorage.setItem("idNumber", idNumber);
+                        localStorage.setItem("idType", idType);
+                        switch (opcion) {
+                          case 'modificar':
+                            window.location.href = 'moddat.html';
+                            break;
+                          case 'consultar':
+                            window.location.href = 'condat.html';
+                            break;
+                          case 'borrar':
+                            window.location.href = 'borrarpersona.html';
+                            break;
+                          default:
+                            console.error('Opción no válida');
+                            break;
+                        }
+                    } else {
+                        alert('Credenciales incorrectas');
+                    }});
+
+        
+      } else {
+        input1.classList.add('invalid');
+      }
+    }    
+  </script>    
+</body>
+<footer>
+    <a href="menu.html" class="button">Volver</a>
+</footer>
+</html>

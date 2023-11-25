@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style2.css">
+    <link rel="icon" href="./public/icon.png" type="image/x-icon">
+    <title>Crea persona</title>
+</head>
+<body>
+    <div class="conheader">
+        <img class="logo" src="./public/pdatabase.png" alt="pdatabase">
+        <p class="title">Crear Persona</p>
+    </div>
+    <div class="container">
+        <div class="square">
+            <div>
+            <div class="inputs">
+                <div>
+                    <div class="block">
+                        <div class="text">Tipo de documento</div>
+                        <select id="select1" class="lista-input">
+                            <option value="">Seleccione una opción</option>
+                            <option value="opcion1">Cedula</option>
+                            <option value="opcion2">Tarjeta de identidad</option>
+                        </select>
+                    </div>
+                    <div class="block">
+                        <div class="text">No. de documento</div>
+                        <input type="text" id="input1" class="text-input nodocumento" placeholder="Ingrese un número">
+                    </div>
+                    <div class="block">
+                        <div class="text">Primer nombre</div>
+                        <input type="text" id="input2" class="text-input pnombre" placeholder="Ingrese su nombre">
+                    </div>
+                    <div class="block">
+                        <div class="text">Segundo nombre</div>
+                        <input type="text" id="input3" class="text-input snombre" placeholder="Ingrese su segundo nombre">
+                    </div>
+                    <div class="block">
+                        <div class="text">Apellidos</div>
+                        <input type="text" id="input4" class="text-input apellidos" placeholder="Ingrese sus apellidos">
+                    </div>
+                </div>
+                <div>
+                    <button class="botonfoto" id="seleccionarFoto">
+                        <img class="fotoboton" id="fotoMostrada" src="./public/imageloader.png" alt="">
+                    </button>
+                    <input type="file" id="inputFoto" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <div class="block">
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="block">
+                <div class="text">Fecha de nacimiento</div>
+                <input type="date" id="date1" class="fecha-input" value="2020-10-06">
+            </div>
+            <div class="block">
+                <div class="text genero">Género</div>
+                <select id="select2" class="lista-input">
+                    <option value="">Seleccione una opción</option>
+                    <option value="opcion1">Femenino</option>
+                    <option value="opcion2">Masculino</option>
+                    <option value="opcion3">No binario</option>
+                </select>
+            </div>
+            <div class="block">
+                <div class="text correo">Correo electrónico</div>
+                <input type="text" id="input5" class="text-input correo" placeholder="Ingrese su correo">
+            </div>
+            <div class="block">
+                <div class="text">Celular</div>
+                <input type="text" id="input6" class="text-input celular" placeholder="Ingrese su celular">
+            </div>
+        </div>
+    </div>
+    <div class="acciones">
+        <div class="acciones2">
+            <button onclick="validarFormulario()" class="button">Crear</button>
+            <a href="./creapersona.html" class="button">Reiniciar</a>
+        </div>
+        <div>
+            <a href="./menu.html" class="button">Volver</a>
+        </div>
+    </div>
+    
+    <script>
+        const botonSeleccionar = document.getElementById('seleccionarFoto');
+        const inputFoto = document.getElementById('inputFoto');
+        const fotoMostrada = document.getElementById('fotoMostrada');
+
+        if (botonSeleccionar && inputFoto && fotoMostrada) {
+        botonSeleccionar.addEventListener('click', function() {
+            inputFoto.click();
+        });
+
+        inputFoto.addEventListener('change', function() {
+            if (inputFoto.files.length > 0) {
+            const archivo = inputFoto.files[0];
+
+                if (archivo.size <= 2 * 1024 * 1024) {
+                    const urlImagen = URL.createObjectURL(archivo);
+                    fotoMostrada.src = urlImagen;
+                    botonSeleccionar.classList.remove('invalid');
+                } else {
+                    alert('El archivo seleccionado es demasiado grande. Por favor, elija un archivo de hasta 2 MB.');
+                    fotoMostrada.src = './public/imageloader.png';
+                    botonSeleccionar.classList.add('invalid');
+                }
+            }
+        });
+        }
+
+        function validarFormulario() {
+            const input1 = document.getElementById('input1');
+            const idNumber = input1.value.trim();
+            const input2 = document.getElementById('input2');
+            const firstName = input2.value.trim();
+            const input3 = document.getElementById('input3');
+            const middleName = input3.value.trim();
+            const input4 = document.getElementById('input4');
+            const lastName = input4.value.trim();
+            const input5 = document.getElementById('input5');
+            const email = input5.value.trim();
+            const input6 = document.getElementById('input6');
+            const phone = input6.value.trim();
+
+            const select1 = document.getElementById('select1');
+            const idType = select1.options[select1.selectedIndex].text;
+            const select2 = document.getElementById('select2');
+            const gender = select2.options[select2.selectedIndex].text;
+
+            const date1 = document.getElementById('date1');
+            const birthDate = date1.value;
+
+            if (idType === "") {
+                select1.classList.add('invalid');
+            } else {
+                select1.classList.remove('invalid');
+            }
+
+            if (idNumber !== '' && /^\d{1,10}$/.test(idNumber)) {
+                input1.classList.remove('invalid');
+            } else {
+                input1.classList.add('invalid');
+            }
+
+            if (firstName !== '' && (!/^\d+$/.test(firstName) && firstName.length <= 30)) {
+                input2.classList.remove('invalid');
+            } else {
+                input2.classList.add('invalid');
+            }
+
+            if (middleName !== '' && (!/^\d+$/.test(middleName) && middleName.length <= 30)) {
+                input3.classList.remove('invalid');
+            } else {
+                input3.classList.add('invalid');
+            }
+
+            if (lastName !== '' && (!/^\d+$/.test(lastName) && lastName.length <= 60)) {
+                input4.classList.remove('invalid');
+            } else {
+                input4.classList.add('invalid');
+            }
+
+            if (birthDate !== '') {
+                date1.classList.remove('invalid');
+            } else {
+                date1.classList.add('invalid');
+            }
+
+            if (gender === "") {
+                select2.classList.add('invalid');
+            } else {
+                select2.classList.remove('invalid');
+            }
+
+            if (email !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                input5.classList.remove('invalid');
+            } else {
+                input5.classList.add('invalid');
+            }
+
+            if (phone !== '' && /^\d{1,10}$/.test(phone)) {
+                input6.classList.remove('invalid');
+            } else {
+                input6.classList.add('invalid');
+            }
+
+            if (fotoMostrada.src.includes('imageloader.png')) {
+                botonSeleccionar.classList.add('invalid');
+            } else {
+                botonSeleccionar.classList.remove('invalid');
+            }
+
+            /*const todasLasValidacionesExitosas =
+            !select1.classList.contains('invalid') &&
+            !input1.classList.contains('invalid') &&
+            !input2.classList.contains('invalid') &&
+            !input3.classList.contains('invalid') &&
+            !input4.classList.contains('invalid') &&
+            !date1.classList.contains('invalid') &&
+            !select2.classList.contains('invalid') &&
+            !input5.classList.contains('invalid') &&
+            !input6.classList.contains('invalid') &&
+            !botonSeleccionar.classList.contains('invalid');*
+
+            if (todasLasValidacionesExitosas) {
+                alert('Se ha creado una nueva persona de forma satisfactoria.');
+                window.location.href = 'menu.html';
+            }*/
+
+            const url = "http://localhost:8000/create/";
+            const payload ={idType: idType,
+                            idNumber: idNumber,
+                            firstName: firstName,
+                            middleName: middleName,
+                            lastName: lastName,
+                            birthDate: birthDate,
+                            gender: gender,
+                            email: email,
+                            phone: phone,
+                            photo: fotoMostrada.src };
+
+            //var data = new FormData();
+            //data.append( "json", JSON.stringify( payload ) );
+            console.log(payload);
+            fetch(url, { method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify( payload ) })
+                .then((res) => res.json())
+                .catch((error) => console.error("Error:", error))
+                .then((response) => {
+                    console.log("Success:", response);
+                    if (response.idNumber) {
+                        alert('Usuario creado exitosamente!');
+                        window.location.href = 'menu.html';
+                    } else {
+                        alert('Campos errados, por favor verifique los datos ingresados');
+                    }});
+        }
+    </script>
+</body>
+</html>
