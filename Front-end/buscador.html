@@ -37,6 +37,10 @@
       const idNumber = input1.value.trim();
       const select1 = document.getElementById('select1');
       const idType = select1.options[select1.selectedIndex].text;
+      if (idType === 'Seleccione una opción') {
+        alert('Seleccione un tipo de documento');
+        return;
+      }
 
       if (idNumber !== '' && /^\d{1,10}$/.test(idNumber)) {
         input1.classList.remove('invalid');
